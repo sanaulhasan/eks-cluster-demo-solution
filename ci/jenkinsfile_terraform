@@ -27,7 +27,7 @@ pipeline{
           echo 'checking out terraform repository...'
 
           git credentailsId: 'github', url ''    
-          checkout changelog: false, poll: false, scm: [$class: 'GitSCM', branches: [[name: '${GIT_BRANCH}']], extensions: [[$class: 'SubmoduleOption', disableSubmodules: false, parentCredentials: true, recursiveSubmodules: true, reference: '', trackingSubmodules: false], [$class: 'RelativeTargetDirectory', relativeTargetDir: 'terraform-eks']], userRemoteConfigs: [[credentialsId: 'Jenkins-creds-git', url: 'https://github.com/sanaulhasan/repo']]]            
+          checkout changelog: false, poll: false, scm: [$class: 'GitSCM', branches: [[name: '${GIT_BRANCH}']], extensions: [[$class: 'SubmoduleOption', disableSubmodules: false, parentCredentials: true, recursiveSubmodules: true, reference: '', trackingSubmodules: false], [$class: 'RelativeTargetDirectory', relativeTargetDir: 'terraform-eks']], userRemoteConfigs: [[credentialsId: 'Jenkins-creds-git', url: 'https://github.com/sanaulhasan/eks-cluster-demo-solution.git']]]            
     }
      
     }
