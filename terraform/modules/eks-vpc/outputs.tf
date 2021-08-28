@@ -1,14 +1,5 @@
 
 
-output "config_map_aws_auth" {
-  value = local.config_map_aws_auth
-}
-
-output "kubeconfig" {
-  value = local.kubeconfig
-}
-
-
 output "aws_vpc_id" {
   value = aws_vpc.app.id
 }
