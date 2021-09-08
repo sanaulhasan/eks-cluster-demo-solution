@@ -1,5 +1,9 @@
 pipeline {
     agent { label 'master-k8s' }
+    parameters {
+        string(name: 'ROLLOUT_VERSION', defaultValue: '', description: 'What is your rollout version?')
+        string(name: 'REPLICA_COUNT', defaultValue: '10', description: 'What is your replicas number should be?')
+     }
     stages {
         stage('Checkout') {
             steps {
@@ -12,14 +16,59 @@ pipeline {
 
             
         }
+        stage('Build') {
+            steps {
+                sh'''
+                 cd $WORKSPACE/docker/
+                 docker build -t nginx-app -f dockerfile_nginx .
+                '''
+            }
+
+            
+        }
+        stage('Push') {
+            steps {
+                sh'''
+                 docker tag nginx-app sanaulhasan/nginx-app
+                 docker push sanaulhasan/nginx-app
+
+                '''
+            }
+
+            
+        }
         stage('Deploy') {
             steps {
                 sh'''
                  cd $WORKSPACE/docker/
                  ls -lhtr
+                 roll=`cat nginx-app-deployment.yml | grep 'name: nginx-application'`
+                 sed -i "s/$roll/      - name: nginx-application-v$ROLLOUT_VERSION/g" nginx-app-deployment.yml
+                 
+                 replica=`cat nginx-app-deployment.yml | grep 'replicas:'`
+                 sed -i "s/$replica/  replicas: $REPLICA_COUNT/g" nginx-app-deployment.yml
                  kubectl apply -f nginx-app-deployment.yml
                 '''
-            }            
+            }
+
+            
         }
+    }
+    post{
+        always{
+             echo 'Clean Workspace'
+            
+             echo "All seems well, cleaning up my mess like a good samaritan! Bubye."
+             sh label: 'Cleanup', script:'''
+                docker image prune -af
+                '''
+        }
+        failure {
+            echo 'Failed to run pipeline'
+            }
+        success {
+            echo 'Pipeline completed successfully'
+           
+        }  
     }
 }
