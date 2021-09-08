@@ -1,9 +1,9 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: nginx-deployment2
+  name: app-nginx-deployment
   labels:
-    app: nginx-app
+    app: application
 spec:
   replicas: 15
   selector:
@@ -15,20 +15,20 @@ spec:
         app: nginx-app
     spec:
       containers:
-      - name: nginx-app
+      - name: nginx-application
         image: sanaulhasan/nginx-app:latest
         ports:
         - containerPort: 80
-      imagePullPolicy: Always 
+#      imagePullPolicy: Always
 ---
 
 
 apiVersion: v1
 kind: Service
 metadata:
-  name: my-nginx-svc2
+  name: application-nginx-svc
   labels:
-    run: my-nginx-svc2
+    run: my-nginx-svc
 spec:
   type: NodePort
   ports:
