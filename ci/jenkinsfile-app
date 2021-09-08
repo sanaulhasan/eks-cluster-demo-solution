@@ -1,0 +1,25 @@
+pipeline {
+    agent { label 'master-k8s' }
+    stages {
+        stage('Checkout') {
+            steps {
+                git branch: 'master', 
+                credentialsId: 'sanaulhasan-git',
+                url: 'https://github.com/sanaulhasan/eks-cluster-demo-solution.git'
+                echo "$WORKSPACE"
+                sh "ls -lhtr"
+            }
+
+            
+        }
+        stage('Deploy') {
+            steps {
+                sh'''
+                 cd $WORKSPACE/docker/
+                 ls -lhtr
+                 kubectl apply -f nginx-app-deployment.yml
+                '''
+            }            
+        }
+    }
+}
