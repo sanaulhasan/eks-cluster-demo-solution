@@ -4,7 +4,6 @@ metadata:
   name: app-nginx-deployment
   labels:
     app: application
-    rolloutversion: v1
 spec:
   replicas: 15
   selector:
