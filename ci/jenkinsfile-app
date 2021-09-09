@@ -13,29 +13,22 @@ pipeline {
                 echo "$WORKSPACE"
                 sh "ls -lhtr"
             }
-
-            
         }
         stage('Build') {
             steps {
                 sh'''
                  cd $WORKSPACE/docker/
                  docker build -t nginx-app -f dockerfile_nginx .
-                '''
-            }
-
-            
+                 '''
+            }    
         }
         stage('Push') {
             steps {
                 sh'''
                  docker tag nginx-app sanaulhasan/nginx-app
                  docker push sanaulhasan/nginx-app
-
                 '''
-            }
-
-            
+            }   
         }
         stage('Deploy') {
             steps {
@@ -49,9 +42,7 @@ pipeline {
                  sed -i "s/$replica/  replicas: $REPLICA_COUNT/g" nginx-app-deployment.yml
                  kubectl apply -f nginx-app-deployment.yml
                 '''
-            }
-
-            
+            }      
         }
     }
     post{
